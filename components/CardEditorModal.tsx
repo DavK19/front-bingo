@@ -5,15 +5,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface Props {
   open: boolean;
   initialGrid: string[][];
-  onSave: (grid: string[][]) => void;
+  onSave: (grid: string[][], customId: string) => void;
   onClose: () => void;
 }
 
 export default function CardEditorModal({ open, initialGrid, onSave, onClose }: Props) {
   const [grid, setGrid] = useState<string[][]>(initialGrid);
+  const [customId, setCustomId] = useState('');
 
   useEffect(() => {
     setGrid(initialGrid);
+    setCustomId(''); // Reset ID cuando se abre un nuevo cartón
   }, [initialGrid]);
 
   function setCell(i: number, j: number, v: string) {
@@ -25,10 +27,10 @@ export default function CardEditorModal({ open, initialGrid, onSave, onClose }: 
   }
 
   function handleSave() {
-    const clean = grid.map((r: string[]) => r.map((c: string) => (c ?? '').toString().trim()));
+    const clean = grid.map((r) => r.map((c) => (c ?? '').toString().trim()));
     // Centro comodín sin número visual: guardamos '0'
     if (clean[2]?.[2] !== undefined) clean[2][2] = '0';
-    onSave(clean);
+    onSave(clean, customId.trim());
     onClose();
   }
 
@@ -48,6 +50,21 @@ export default function CardEditorModal({ open, initialGrid, onSave, onClose }: 
               <h2 className="text-lg font-semibold">Editar cartón</h2>
               <button onClick={onClose} className="rounded-md p-2 text-gray-500 hover:bg-gray-100">✕</button>
             </div>
+
+            <div className="mb-4">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                ID del cartón (opcional)
+              </label>
+              <input
+                type="text"
+                placeholder="Ej: Cartón A, Mesa 1, etc."
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                value={customId}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCustomId(e.target.value)}
+                maxLength={20}
+              />
+            </div>
+
             <div className="grid-5x5 gap-2">
               {grid.map((row, i) =>
                 row.map((cell, j) => {

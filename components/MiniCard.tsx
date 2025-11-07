@@ -7,9 +7,11 @@ interface Props {
   grid: Grid;
   calledNumbers: Set<number>;
   selectedPattern: PatternKey;
+  customId?: string;
+  onDelete?: () => void;
 }
 
-export default function MiniCard({ grid, calledNumbers, selectedPattern }: Props) {
+export default function MiniCard({ grid, calledNumbers, selectedPattern, customId, onDelete }: Props) {
   const marks = getMarks(grid, calledNumbers);
   const hasBingo = checkPattern(marks, selectedPattern);
   const n = grid.length;
@@ -20,6 +22,11 @@ export default function MiniCard({ grid, calledNumbers, selectedPattern }: Props
       animate={{ opacity: 1, y: 0 }}
       className={`relative rounded-xl border bg-white p-2 shadow-sm ${hasBingo ? 'ring-2 ring-green-500' : ''}`}
     >
+      {customId && (
+        <div className="mb-1 truncate text-center text-xs font-semibold text-gray-700">
+          {customId}
+        </div>
+      )}
       <div className="grid grid-cols-5 gap-1">
         {Array.from({ length: n }).map((_, i) =>
           Array.from({ length: n }).map((_, j) => {
@@ -43,6 +50,15 @@ export default function MiniCard({ grid, calledNumbers, selectedPattern }: Props
         <div className="pointer-events-none absolute -top-2 -right-2 rounded-full bg-green-500 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow">
           Bingo
         </div>
+      )}
+      {onDelete && (
+        <button
+          onClick={onDelete}
+          className="absolute -top-2 -left-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white shadow-md transition-transform hover:scale-110 hover:bg-red-600"
+          title="Eliminar cartón"
+        >
+          ✕
+        </button>
       )}
     </motion.div>
   );

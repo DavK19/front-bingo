@@ -39,13 +39,18 @@ export default function Page() {
     setShowEditor(true);
   }
 
-  function handleSaveGrid(cleanGrid: Grid) {
+  function handleSaveGrid(cleanGrid: Grid, customId: string) {
     const card: Card = {
       id: crypto.randomUUID(),
+      customId: customId || undefined,
       grid: sanitizeTo5x5(cleanGrid),
       createdAt: Date.now(),
     };
     setCards((prev: Card[]) => [card, ...prev]);
+  }
+
+  function deleteCard(cardId: string) {
+    setCards((prev: Card[]) => prev.filter((c) => c.id !== cardId));
   }
 
   function addNumbers(nums: number[]) {
@@ -104,6 +109,8 @@ export default function Page() {
                 grid={card.grid}
                 calledNumbers={calledNumbers}
                 selectedPattern={selectedPattern}
+                customId={card.customId}
+                onDelete={() => deleteCard(card.id)}
               />
             ))}
           </div>

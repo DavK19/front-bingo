@@ -10,6 +10,7 @@ export interface BingoOCRResponse {
 
 export interface Card {
   id: string;
+  customId?: string; // ID visible elegido por el usuario
   grid: Grid; // 5x5 expected. Center [2][2] must be '0' (comodín)
   createdAt: number;
 }
