@@ -32,15 +32,18 @@ export default function MiniCard({ grid, calledNumbers, selectedPattern, customI
           Array.from({ length: n }).map((_, j) => {
             const center = n === 5 && i === 2 && j === 2;
             const marked = marks[i]?.[j];
+            const cellValue = grid[i]?.[j] ?? '';
+            const displayValue = center ? '' : cellValue;
+            
             return (
               <div
                 key={`${i}-${j}`}
-                className={`flex aspect-square items-center justify-center rounded-md text-xs font-semibold ${
-                  marked ? 'bg-primary-100 text-primary-700' : 'bg-gray-50 text-gray-500'
+                className={`flex aspect-square items-center justify-center rounded-md text-[10px] font-semibold transition-colors ${
+                  marked ? 'bg-primary-500 text-white' : 'bg-gray-50 text-gray-700'
                 } ${center ? 'opacity-60' : ''}`}
-                title={grid[i]?.[j] ?? ''}
+                title={cellValue}
               >
-                {/* No es necesario mostrar número en miniatura */}
+                {displayValue}
               </div>
             );
           })
